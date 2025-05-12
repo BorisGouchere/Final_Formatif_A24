@@ -1,0 +1,26 @@
+
+//C’est un test unitaire qui s’assure que si une place hors-limite est demandée, le contrôleur retourne une erreur 404 (NotFound) avec le bon message.
+[TestMethod]
+public void ReserveSeat_SeatOutOfBounds()
+
+// Tu dis ici : « Peu importe l’utilisateur (string) ou le numéro de place (int) utilisé, le service va lancer une exception SeatOutOfBoundsException. »
+C’est ce que ferait SeatsService si tu essayais de réserver un siège comme le numéro 101, alors que la limite est 100.
+serviceMock.Setup(s => s.ReserveSeat(It.IsAny<string>(), It.IsAny<int>()))
+           .Throws(new SeatOutOfBoundsException());
+ 
+//Tu choisis un numéro de siège à passer à ton contrôleur. Peu importe lequel ici, car la logique est mockée pour toujours lancer une exception.
+var seatNumber = 1;
+
+// Tu appelles l’action réelle du contrôleur avec ce numéro de siège. Grâce à CallBase = true, c’est bien la vraie méthode ReserveSeat(int) du contrôleur qui est appelée.
+var actionresult = controllerMock.Object.ReserveSeat(seatNumber);
+
+//Tu t’attends à ce que l’action retourne une réponse HTTP 404, avec un corps (donc NotFoundObjectResult plutôt que juste NotFoundResult).
+var result = actionresult.Result as NotFoundObjectResult;
+
+//Tu vérifies que tu as bien reçu un résultat de type 404 avec contenu.
+Assert.IsNotNull(result);
+
+//Tu vérifies que le message retourné est exactement celui que ton contrôleur devrait générer dans ce cas :
+Assert.AreEqual("Could not find " + seatNumber, result.Value);
+
+

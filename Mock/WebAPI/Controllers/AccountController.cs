@@ -22,6 +22,7 @@ namespace WebAPI.Controllers
         IConfiguration configuration
     ) : ControllerBase
     {
+
         // POST api/Account/Login
         [HttpPost]
         public async Task<ActionResult> Login(LoginDTO login)
