@@ -64,6 +64,7 @@ namespace BackgroundServiceVote.Services
             _currentQuestion.PlayerChoices[choice]++;
 
             // TODO: Notifier les clients qu'un joueur a choisi une réponse
+            await _mathQuestionHub.Clients.All.SendAsync("SelectChoice", userData.Choice);
         }
 
         private async Task EvaluateChoices()
